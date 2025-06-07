@@ -14,10 +14,33 @@ const addBook = async (req, res) => {
 };
 
 // to get all books with pagination
+// Get all books (with pagination and optional filters by author and genre)
+
 const getAllBooks = async (req, res) => {
     try {
-        const books = await Book.find();
-        res.status(200).send(books);
+        const { author, genre, page = 1, limit = 10 } = req.query;
+
+        // Build the filter object
+        const filter = {};
+        if (author) filter.author = { $regex: author, $options: "i" };
+        if (genre) filter.genre = { $regex: genre, $options: "i" };
+
+        // Pagination logic
+        const skip = (page - 1) * limit;
+
+        // Fetch books with filters and pagination
+        const books = await Book.find(filter)
+            .skip(skip)
+            .limit(parseInt(limit));
+
+        const totalCount = await Book.countDocuments(filter); // Get total count for frontend pagination
+
+        res.status(200).json({
+            total: totalCount,
+            page: parseInt(page),
+            limit: parseInt(limit),
+            data: books
+        });
     } catch (error) {
         res.status(500).send(error);
     }

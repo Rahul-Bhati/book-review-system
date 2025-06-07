@@ -70,6 +70,52 @@ curl -X POST http://localhost:3000/api/auth/login \
 }'
 ```
 
+## Database Schema
+
+The application uses MongoDB with three main collections:
+
+### 1. Users Collection
+```javascript
+{
+    _id: ObjectId,
+    email: String,    // Unique
+    password: String  // Hashed
+}
+```
+
+### 2. Books Collection
+```javascript
+{
+    _id: ObjectId,
+    title: String,     // Required
+    author: String,   // Required
+    avgRating: Number // Default: 0
+}
+```
+
+### 3. Reviews Collection
+```javascript
+{
+    _id: ObjectId,
+    user: ObjectId,    // Reference to User
+    book: ObjectId,    // Reference to Book
+    rating: Number,    // Required
+    comment: String    // Required
+}
+```
+
+### Relationships
+- A User can have multiple Reviews (one-to-many)
+- A Book can have multiple Reviews (one-to-many)
+- The Book's avgRating is automatically calculated based on Reviews
+
+### Schema Notes
+- All required fields are marked with `required: true`
+- Passwords are hashed before storage
+- Email field in Users is unique
+- Reviews maintain referential integrity with Users and Books through ObjectId references
+- The schema is designed to support efficient search operations for books and reviews
+
 ## Design Decisions and Assumptions
 
 1. **Database Choice**: MongoDB was chosen for its flexibility in handling book review data and ease of implementing search functionality.
