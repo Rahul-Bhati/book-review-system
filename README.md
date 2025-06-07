@@ -38,27 +38,7 @@ The API will be available at `http://localhost:3000`
 
 ## Example API Requests
 
-### 1. Book Operations
-
-#### Create a Book
-```bash
-curl -X POST http://localhost:3000/api/books \
--H "Content-Type: application/json" \
--H "Authorization: Bearer <your-token>" \
--d '{
-    "title": "Example Book",
-    "author": "John Doe",
-    "description": "A great book",
-    "rating": 4.5
-}'
-```
-
-#### Search Books
-```bash
-curl http://localhost:3000/api/search?title=example&author=example
-```
-
-### 2. Authentication
+### 1. Authentication
 
 #### Login
 ```bash
@@ -69,6 +49,90 @@ curl -X POST http://localhost:3000/api/auth/login \
     "password": "password123"
 }'
 ```
+
+### 2. Books Management
+
+#### Add a New Book (Requires Authentication)
+```bash
+curl -X POST http://localhost:3000/books \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your-token>" \
+-d '{
+    "title": "Example Book",
+    "author": "John Doe"
+}'
+```
+
+#### Get All Books (With Pagination)
+```bash
+curl "http://localhost:3000/books?page=1&limit=10&author=doe"
+```
+
+#### Get Book Details (With Reviews)
+```bash
+curl "http://localhost:3000/books/648212345678901234567890"
+```
+
+#### Update Book (Requires Authentication)
+```bash
+curl -X PUT http://localhost:3000/books/648212345678901234567890 \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your-token>" \
+-d '{
+    "title": "Updated Book Title"
+}'
+```
+
+#### Delete Book (Requires Authentication)
+```bash
+curl -X DELETE http://localhost:3000/books/648212345678901234567890 \
+-H "Authorization: Bearer <your-token>"
+```
+
+### 3. Reviews Management
+
+#### Add a Review (Requires Authentication)
+```bash
+curl -X POST http://localhost:3000/books/648212345678901234567890/reviews \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your-token>" \
+-d '{
+    "rating": 4.5,
+    "comment": "Great book!"
+}'
+```
+
+### 4. Search
+
+#### Search Books by Title or Author
+```bash
+curl "http://localhost:3000/search?q=example"
+```
+
+### API Response Format
+
+All successful responses follow this format:
+```json
+{
+    "status": "success",
+    "data": {...}
+}
+```
+
+Error responses follow this format:
+```json
+{
+    "status": "error",
+    "message": "Error message",
+    "code": 400
+}
+```
+
+### Authentication Notes
+- All book management operations (add, update, delete) require authentication
+- Review operations require authentication
+- Regular users can only add one review per book
+- Search and getting book details are public endpoints
 
 ## Database Schema
 
