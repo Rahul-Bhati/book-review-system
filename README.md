@@ -1,1 +1,100 @@
-# book-review-system
+# Book Review API
+
+A RESTful API for managing book reviews and search functionality.
+
+## Project Setup Instructions
+
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd book-review-api
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+- Copy `.env.example` to `.env`
+- Fill in the required environment variables:
+  - `MONGODB_URI`: Your MongoDB connection string
+  - `JWT_SECRET`: Your JWT secret key
+  - `PORT`: Application port (default: 3000)
+
+## How to Run Locally
+
+1. Development mode (with auto-reload):
+```bash
+npm run dev
+```
+
+2. Production mode:
+```bash
+npm start
+```
+
+The API will be available at `http://localhost:3000`
+
+## Example API Requests
+
+### 1. Book Operations
+
+#### Create a Book
+```bash
+curl -X POST http://localhost:3000/api/books \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your-token>" \
+-d '{
+    "title": "Example Book",
+    "author": "John Doe",
+    "description": "A great book",
+    "rating": 4.5
+}'
+```
+
+#### Search Books
+```bash
+curl http://localhost:3000/api/search?title=example&author=example
+```
+
+### 2. Authentication
+
+#### Login
+```bash
+curl -X POST http://localhost:3000/api/auth/login \
+-H "Content-Type: application/json" \
+-d '{
+    "email": "user@example.com",
+    "password": "password123"
+}'
+```
+
+## Design Decisions and Assumptions
+
+1. **Database Choice**: MongoDB was chosen for its flexibility in handling book review data and ease of implementing search functionality.
+
+2. **Authentication**: JWT-based authentication is implemented for secure user sessions and protected routes.
+
+3. **API Structure**: The API follows RESTful principles with clear endpoints for books and search functionality.
+
+4. **Validation**: Zod is used for request body validation to ensure data integrity and provide clear error messages.
+
+5. **Development Tools**: 
+   - Express.js as the web framework
+   - Mongoose for MongoDB ORM
+   - Nodemon for development hot-reloading
+   - dotenv for environment variable management
+
+6. **Error Handling**: The API implements consistent error handling with appropriate HTTP status codes and error messages.
+
+## Project Structure
+
+```
+book-review-api/
+├── controllers/     # API controllers
+├── models/         # MongoDB models
+├── routes/         # API routes
+├── middleware/     # Custom middleware
+├── db/            # Database configuration
+└── app.js         # Main application file
